@@ -19,4 +19,4 @@ TaskFlow es una aplicación de consola desarrollada en C# como parte del entrena
 ## Cómo Ejecutarlo
 1. **Clonar el repositorio:**
    ```bash
-   git clone
+   git clone https://github.com/AAAActis/taskflow
