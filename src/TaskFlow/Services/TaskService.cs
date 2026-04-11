@@ -13,6 +13,18 @@ namespace TaskFlow.Services
             _tasks = CargarTareas();
         }
 
+        public TaskItem ActualizarEstado(int id, TaskItem.EstadoTarea nuevoEstado)
+        {
+            var tarea = _tasks.FirstOrDefault(t => t.Id == id)
+                ?? throw new KeyNotFoundException($"No se encontró la tarea con ID {id}.");
+
+            tarea.Status = nuevoEstado;
+            tarea.UpdatedAt = DateTime.Now;
+
+            GuardarTareas();
+            return tarea;
+        }
+
         private List<TaskItem> CargarTareas()
         {
             if (!File.Exists(_filePath))
