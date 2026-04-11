@@ -28,6 +28,41 @@ while (!salir)
             break;
 
         case "2":
+            Console.Clear();
+            Console.WriteLine("--- LISTAR TAREAS ---");
+            Console.WriteLine("1. Mostrar todas");
+            Console.WriteLine("2. Solo Pendientes");
+            Console.WriteLine("3. Solo En Progreso");
+            Console.WriteLine("4. Solo Completadas");
+            Console.Write("\nSeleccione una opción de filtrado (1-4): ");
+            
+            string opcionFiltro = Console.ReadLine() ?? "1";
+            TaskFlow.Models.TaskStatus? estadoFiltro = null;
+
+            switch (opcionFiltro)
+            {
+                case "2": estadoFiltro = TaskFlow.Models.TaskStatus.Pendiente; break;
+                case "3": estadoFiltro = TaskFlow.Models.TaskStatus.EnProgreso; break;
+                case "4": estadoFiltro = TaskFlow.Models.TaskStatus.Completada; break;
+            }
+
+            var listaTareas = service.ListarTareas(estadoFiltro);
+
+            Console.WriteLine("\n--- RESULTADO ---");
+            if (listaTareas.Count == 0)
+            {
+                Console.WriteLine("No hay tareas registradas con ese estado.");
+            }
+            else
+            {
+                foreach (var t in listaTareas)
+                {
+                    Console.WriteLine($"ID: {t.Id} | Título: {t.Title} | Resp: {t.Responsible} | Estado: {t.Status} | Creada: {t.CreatedAt:dd/MM/yyyy}");
+                }
+            }
+            ConsoleHelper.EsperarTecla();
+            break;
+
         case "3":
         case "4":
         case "5":
