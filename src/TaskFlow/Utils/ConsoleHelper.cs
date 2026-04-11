@@ -5,13 +5,9 @@ public class ConsoleHelper
     public void WriteLine(string? message = null)
     {
         if (message is null)
-        {
             System.Console.WriteLine();
-        }
         else
-        {
             System.Console.WriteLine(message);
-        }
     }
 
     public void Write(string message)
@@ -31,11 +27,9 @@ public class ConsoleHelper
             Write(prompt);
             var value = ReadLine();
             if (!string.IsNullOrWhiteSpace(value))
-            {
                 return value.Trim();
-            }
 
-            WriteLine("Please enter a non-empty value.");
+            WriteLine("Por favor ingrese un valor no vacío.");
         }
     }
 }

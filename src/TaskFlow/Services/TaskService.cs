@@ -1,18 +1,32 @@
+using System.Text.Json;
 using TaskFlow.Models;
 
-namespace TaskFlow.Services;
-
-public class TaskService
+namespace TaskFlow.Services
 {
-    private readonly List<TaskItem> _tasks = new();
-    private int _nextId = 1;
-
-    public TaskItem AddTask(string title)
+    public class TaskService
     {
-        var newTask = new TaskItem(_nextId++, title);
-        _tasks.Add(newTask);
-        return newTask;
-    }
+        private readonly string _filePath = "data/tasks.json";
+        private List<TaskItem> _tasks;
 
-    public IReadOnlyList<TaskItem> GetAll() => _tasks.AsReadOnly();
+        public TaskService()
+        {
+            _tasks = CargarTareas();
+        }
+
+        private List<TaskItem> CargarTareas()
+        {
+            if (!File.Exists(_filePath))
+                return new List<TaskItem>();
+
+            string json = File.ReadAllText(_filePath);
+            return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+        }
+
+        private void GuardarTareas()
+        {
+            Directory.CreateDirectory("data");
+            string json = JsonSerializer.Serialize(_tasks, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_filePath, json);
+        }
+    }
 }
