@@ -1,4 +1,13 @@
+using System;
+
 namespace TaskFlow.Models;
+
+public enum EstadoTarea
+{
+    Pendiente,
+    EnProgreso,
+    Completada
+}
 
 public class TaskItem
 {
@@ -10,17 +19,14 @@ public class TaskItem
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; set; }
 
+    public TaskItem()
+    {
+    }
+
     public TaskItem(int id, string title)
     {
         Id = id;
         Title = title;
-        CreatedAt = DateTime.UtcNow;
-    }
-
-    public enum EstadoTarea
-    {
-        Pendiente,
-        EnProgreso,
-        Completada
+        CreatedAt = DateTime.Now; 
     }
 }

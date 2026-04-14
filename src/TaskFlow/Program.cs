@@ -50,11 +50,11 @@ while (!salir)
 
             string opcionEstado = console.ReadLine()?.Trim() ?? string.Empty;
 
-            TaskItem.EstadoTarea? nuevoEstado = opcionEstado switch
+            EstadoTarea? nuevoEstado = opcionEstado switch
             {
-                "1" => TaskItem.EstadoTarea.Pendiente,
-                "2" => TaskItem.EstadoTarea.EnProgreso,
-                "3" => TaskItem.EstadoTarea.Completada,
+                "1" => EstadoTarea.Pendiente,
+                "2" => EstadoTarea.EnProgreso,
+                "3" => EstadoTarea.Completada,
                 _ => null
             };
 
@@ -71,9 +71,9 @@ while (!salir)
                 var tarea = service.ActualizarEstado(id, nuevoEstado.Value);
                 string estadoTexto = tarea.Status switch
                 {
-                    TaskItem.EstadoTarea.Pendiente => "Pendiente",
-                    TaskItem.EstadoTarea.EnProgreso => "En Progreso",
-                    TaskItem.EstadoTarea.Completada => "Completada",
+                    EstadoTarea.Pendiente => "Pendiente",
+                    EstadoTarea.EnProgreso => "En Progreso",
+                    EstadoTarea.Completada => "Completada",
                     _ => tarea.Status.ToString()
                 };
                 console.WriteLine($"\n✔ Tarea #{tarea.Id} '{tarea.Title}' actualizada.");
