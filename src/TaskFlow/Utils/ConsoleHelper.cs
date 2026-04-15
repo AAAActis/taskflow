@@ -1,35 +1,59 @@
-namespace TaskFlow.Utils;
+using System;
 
-public class ConsoleHelper
+namespace TaskFlow.Utils
 {
-    public void WriteLine(string? message = null)
+    public class ConsoleHelper
     {
-        if (message is null)
-            System.Console.WriteLine();
-        else
-            System.Console.WriteLine(message);
-    }
-
-    public void Write(string message)
-    {
-        System.Console.Write(message);
-    }
-
-    public string? ReadLine()
-    {
-        return System.Console.ReadLine();
-    }
-
-    public string ReadNonEmptyString(string prompt)
-    {
-        while (true)
+        public void WriteLine(string? message = null)
         {
-            Write(prompt);
-            var value = ReadLine();
-            if (!string.IsNullOrWhiteSpace(value))
-                return value.Trim();
+            if (message is null)
+                Console.WriteLine();
+            else
+                Console.WriteLine(message);
+        }
 
-            WriteLine("Por favor ingrese un valor no vacío.");
+        public void Write(string message)
+        {
+            Console.Write(message);
+        }
+
+        public string? ReadLine()
+        {
+            return Console.ReadLine();
+        }
+
+        public (string title, string description, string responsible) PedirDatosNuevaTarea()
+        {
+            WriteLine("\n--- CREAR NUEVA TAREA ---");
+
+            string title = ReadNonEmptyString("Título (obligatorio): ");
+
+            Write("Descripción (opcional): ");
+            string description = ReadLine()?.Trim() ?? string.Empty;
+
+            Write("Responsable: ");
+            string responsible = ReadLine()?.Trim() ?? string.Empty;
+
+            return (title, description, responsible);
+        }
+
+        public void EsperarTecla()
+        {
+            WriteLine("\nPresione cualquier tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        public string ReadNonEmptyString(string prompt)
+        {
+            while (true)
+            {
+                Write(prompt);
+                var value = ReadLine();
+                if (!string.IsNullOrWhiteSpace(value))
+                    return value.Trim();
+
+                WriteLine("Por favor ingrese un valor no vacío.");
+            }
         }
     }
 }
