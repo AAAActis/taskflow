@@ -1,33 +1,59 @@
+using System;
+
 namespace TaskFlow.Utils
 {
-    public static class ConsoleHelper
+    public class ConsoleHelper
     {
-        public static (string title, string description, string responsible) PedirDatosNuevaTarea()
+        public void WriteLine(string? message = null)
         {
-            Console.WriteLine("\n--- CREAR NUEVA TAREA ---");
+            if (message is null)
+                Console.WriteLine();
+            else
+                Console.WriteLine(message);
+        }
 
-            string title;
-            do
-            {
-                Console.Write("Título (obligatorio): ");
-                title = Console.ReadLine()?.Trim() ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(title))
-                    Console.WriteLine("El título no puede estar vacío.");
-            } while (string.IsNullOrWhiteSpace(title));
+        public void Write(string message)
+        {
+            Console.Write(message);
+        }
 
-            Console.Write("Descripción (opcional): ");
-            string description = Console.ReadLine()?.Trim() ?? string.Empty;
+        public string? ReadLine()
+        {
+            return Console.ReadLine();
+        }
 
-            Console.Write("Responsable: ");
-            string responsible = Console.ReadLine()?.Trim() ?? string.Empty;
+        public (string title, string description, string responsible) PedirDatosNuevaTarea()
+        {
+            WriteLine("\n--- CREAR NUEVA TAREA ---");
+
+            string title = ReadNonEmptyString("Título (obligatorio): ");
+
+            Write("Descripción (opcional): ");
+            string description = ReadLine()?.Trim() ?? string.Empty;
+
+            Write("Responsable: ");
+            string responsible = ReadLine()?.Trim() ?? string.Empty;
 
             return (title, description, responsible);
         }
 
-        public static void EsperarTecla()
+        public void EsperarTecla()
         {
-            Console.WriteLine("\nPresione cualquier tecla para continuar...");
+            WriteLine("\nPresione cualquier tecla para continuar...");
             Console.ReadKey();
+        }
+
+        public string ReadNonEmptyString(string prompt)
+        {
+            while (true)
+            {
+                Write(prompt);
+                var value = ReadLine();
+                if (!string.IsNullOrWhiteSpace(value))
+                    return value.Trim();
+
+                WriteLine("Por favor ingrese un valor no vacío.");
+            }
         }
     }
 }

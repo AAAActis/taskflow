@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.Json;
 using TaskFlow.Models;
 
@@ -5,11 +9,14 @@ namespace TaskFlow.Services
 {
     public class TaskService
     {
-        private readonly string _filePath = "data/tasks.json";
+        private readonly string _directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
+        private readonly string _filePath;
+
         private List<TaskItem> _tasks;
 
         public TaskService()
         {
+            _filePath = Path.Combine(_directoryPath, "tasks.json");
             _tasks = CargarTareas();
         }
 
@@ -20,13 +27,13 @@ namespace TaskFlow.Services
 
             var tarea = new TaskItem
             {
-                Id          = _tasks.Count > 0 ? _tasks.Max(t => t.Id) + 1 : 1,
-                Title       = title,
+                Id = _tasks.Count > 0 ? _tasks.Max(t => t.Id) + 1 : 1,
+                Title = title,
                 Description = description,
                 Responsible = responsible,
-                Status = TaskFlow.Models.TaskStatus.Pendiente,
-                CreatedAt   = DateTime.Now,
-                UpdatedAt   = null
+                Status = EstadoTarea.Pendiente, 
+                CreatedAt = DateTime.Now,
+                UpdatedAt = null
             };
 
             _tasks.Add(tarea);
@@ -34,16 +41,26 @@ namespace TaskFlow.Services
             return tarea;
         }
 
-        public List<TaskItem> ListarTareas(TaskFlow.Models.TaskStatus? filtroEstado = null)
+        public List<TaskItem> ListarTareas(EstadoTarea? filtroEstado = null)
         {
             if (filtroEstado.HasValue)
             {
-                // Si mandamos un estado, filtramos la lista antes de devolverla
                 return _tasks.Where(t => t.Status == filtroEstado.Value).OrderBy(t => t.Id).ToList();
             }
-            
-            // Si no mandamos nada (es nulo), devuelve todas
+
             return _tasks.OrderBy(t => t.Id).ToList();
+        }
+
+        public TaskItem ActualizarEstado(int id, EstadoTarea nuevoEstado)
+        {
+            var tarea = _tasks.FirstOrDefault(t => t.Id == id)
+                ?? throw new KeyNotFoundException($"No se encontró la tarea con ID {id}.");
+
+            tarea.Status = nuevoEstado;
+            tarea.UpdatedAt = DateTime.Now;
+
+            GuardarTareas();
+            return tarea;
         }
 
         private List<TaskItem> CargarTareas()
@@ -51,13 +68,24 @@ namespace TaskFlow.Services
             if (!File.Exists(_filePath))
                 return new List<TaskItem>();
 
-            string json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+            try
+            {
+                string json = File.ReadAllText(_filePath);
+                return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+            }
+            catch
+            {
+                return new List<TaskItem>();
+            }
         }
 
         private void GuardarTareas()
         {
-            Directory.CreateDirectory("data");
+            if (!Directory.Exists(_directoryPath))
+            {
+                Directory.CreateDirectory(_directoryPath);
+            }
+
             string json = JsonSerializer.Serialize(_tasks, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json);
         }
