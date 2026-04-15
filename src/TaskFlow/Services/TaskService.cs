@@ -34,26 +34,32 @@ namespace TaskFlow.Services
             return tarea;
         }
 
-        private JsonSerializerOptions GetOptions() => new JsonSerializerOptions
-{
-    WriteIndented = true,
-    Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
-};
+        public List<TaskItem> ListarTareas(TaskFlow.Models.TaskStatus? filtroEstado = null)
+        {
+            if (filtroEstado.HasValue)
+            {
+                // Si mandamos un estado, filtramos la lista antes de devolverla
+                return _tasks.Where(t => t.Status == filtroEstado.Value).OrderBy(t => t.Id).ToList();
+            }
+            
+            // Si no mandamos nada (es nulo), devuelve todas
+            return _tasks.OrderBy(t => t.Id).ToList();
+        }
 
-private List<TaskItem> CargarTareas()
-{
-    if (!File.Exists(_filePath))
-        return new List<TaskItem>();
+        private List<TaskItem> CargarTareas()
+        {
+            if (!File.Exists(_filePath))
+                return new List<TaskItem>();
 
-    string json = File.ReadAllText(_filePath);
-    return JsonSerializer.Deserialize<List<TaskItem>>(json, GetOptions()) ?? new List<TaskItem>();
-}
+            string json = File.ReadAllText(_filePath);
+            return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+        }
 
-private void GuardarTareas()
-{
-    Directory.CreateDirectory("data");
-    string json = JsonSerializer.Serialize(_tasks, GetOptions());
-    File.WriteAllText(_filePath, json);
-}
+        private void GuardarTareas()
+        {
+            Directory.CreateDirectory("data");
+            string json = JsonSerializer.Serialize(_tasks, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_filePath, json);
+        }
     }
 }
