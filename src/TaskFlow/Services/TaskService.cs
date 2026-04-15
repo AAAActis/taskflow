@@ -34,8 +34,15 @@ namespace TaskFlow.Services
             return tarea;
         }
 
-        public List<TaskItem> ListarTareas()
+        public List<TaskItem> ListarTareas(TaskFlow.Models.TaskStatus? filtroEstado = null)
         {
+            if (filtroEstado.HasValue)
+            {
+                // Si mandamos un estado, filtramos la lista antes de devolverla
+                return _tasks.Where(t => t.Status == filtroEstado.Value).OrderBy(t => t.Id).ToList();
+            }
+            
+            // Si no mandamos nada (es nulo), devuelve todas
             return _tasks.OrderBy(t => t.Id).ToList();
         }
 
