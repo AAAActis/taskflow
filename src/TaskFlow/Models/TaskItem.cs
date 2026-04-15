@@ -1,15 +1,20 @@
-namespace TaskFlow.Models;
-
-public class TaskItem
+namespace TaskFlow.Models
 {
-    public int Id { get; init; }
-    public string Title { get; init; }
-    public DateTime CreatedAt { get; init; }
-
-    public TaskItem(int id, string title)
+    public enum TaskStatus
     {
-        Id = id;
-        Title = title;
-        CreatedAt = DateTime.UtcNow;
+        Pendiente,
+        EnProgreso,
+        Completada
+    }
+
+    public class TaskItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Responsible { get; set; } = string.Empty;
+        public TaskStatus Status { get; set; } = TaskStatus.Pendiente;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? UpdatedAt { get; set; }
     }
 }

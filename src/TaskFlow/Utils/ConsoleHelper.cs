@@ -1,41 +1,33 @@
-namespace TaskFlow.Utils;
-
-public class ConsoleHelper
+namespace TaskFlow.Utils
 {
-    public void WriteLine(string? message = null)
+    public static class ConsoleHelper
     {
-        if (message is null)
+        public static (string title, string description, string responsible) PedirDatosNuevaTarea()
         {
-            System.Console.WriteLine();
-        }
-        else
-        {
-            System.Console.WriteLine(message);
-        }
-    }
+            Console.WriteLine("\n--- CREAR NUEVA TAREA ---");
 
-    public void Write(string message)
-    {
-        System.Console.Write(message);
-    }
-
-    public string? ReadLine()
-    {
-        return System.Console.ReadLine();
-    }
-
-    public string ReadNonEmptyString(string prompt)
-    {
-        while (true)
-        {
-            Write(prompt);
-            var value = ReadLine();
-            if (!string.IsNullOrWhiteSpace(value))
+            string title;
+            do
             {
-                return value.Trim();
-            }
+                Console.Write("Título (obligatorio): ");
+                title = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(title))
+                    Console.WriteLine("El título no puede estar vacío.");
+            } while (string.IsNullOrWhiteSpace(title));
 
-            WriteLine("Please enter a non-empty value.");
+            Console.Write("Descripción (opcional): ");
+            string description = Console.ReadLine()?.Trim() ?? string.Empty;
+
+            Console.Write("Responsable: ");
+            string responsible = Console.ReadLine()?.Trim() ?? string.Empty;
+
+            return (title, description, responsible);
+        }
+
+        public static void EsperarTecla()
+        {
+            Console.WriteLine("\nPresione cualquier tecla para continuar...");
+            Console.ReadKey();
         }
     }
 }
