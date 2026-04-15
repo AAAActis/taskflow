@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using TaskFlow.Models;
+
 namespace TaskFlow.Utils
 {
     public static class ConsoleHelper
@@ -22,6 +25,22 @@ namespace TaskFlow.Utils
             string responsible = Console.ReadLine()?.Trim() ?? string.Empty;
 
             return (title, description, responsible);
+        }
+
+        public static void MostrarListaTareas(List<TaskItem> tareas)
+        {
+            Console.WriteLine("\n--- LISTA DE TAREAS ---");
+            
+            if (tareas.Count == 0)
+            {
+                Console.WriteLine("No hay tareas registradas en el sistema.");
+                return;
+            }
+
+            foreach (var t in tareas)
+            {
+                Console.WriteLine($"[{t.Id}] {t.Title} | Estado: {t.Status} | Responsable: {t.Responsible}");
+            }
         }
 
         public static void EsperarTecla()
