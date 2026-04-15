@@ -24,7 +24,7 @@ namespace TaskFlow.Services
                 Title       = title,
                 Description = description,
                 Responsible = responsible,
-                Status      = TaskFlow.Models.TaskStatus.Pendiente,
+                Status = TaskFlow.Models.TaskStatus.Pendiente,
                 CreatedAt   = DateTime.Now,
                 UpdatedAt   = null
             };
