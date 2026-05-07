@@ -109,10 +109,30 @@ while (!salir)
 
         case "4":
         case "5":
-            console.WriteLine("\nFuncionalidad pendiente de implementación.");
+            console.WriteLine("\n--- ELIMINAR TAREA ---");
+            Console.Write("ID de la tarea a eliminar: ");
+
+            string inputIdEliminar = console.ReadLine()?.Trim() ?? string.Empty;
+
+            if (!int.TryParse(inputIdEliminar, out int idEliminar))
+            {
+                console.WriteLine("ID inválido. Debe ser un número entero.");
+                console.EsperarTecla();
+                break;
+            }
+
+            try
+            {
+                service.EliminarTarea(idEliminar);
+                console.WriteLine($"\n✔ Tarea #{idEliminar} eliminada correctamente del sistema y del JSON.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                console.WriteLine($"\nError: {ex.Message}");
+            }
+
             console.EsperarTecla();
             break;
-
         case "6":
             salir = true;
             break;

@@ -63,6 +63,15 @@ namespace TaskFlow.Services
             return tarea;
         }
 
+        public void EliminarTarea(int id)
+        {
+            var tarea = _tasks.FirstOrDefault(t => t.Id == id)
+                ?? throw new KeyNotFoundException($"No se encontró la tarea con ID {id}.");
+
+            _tasks.Remove(tarea);
+            GuardarTareas();
+        }
+
         private List<TaskItem> CargarTareas()
         {
             if (!File.Exists(_filePath))
