@@ -10,14 +10,9 @@ var service = new TaskService();
 bool salir = false;
 while (!salir)
 {
-    Console.Clear();
-    console.WriteLine("=== TASKFLOW ===");
-    console.WriteLine("1. Crear tarea");
-    console.WriteLine("2. Listar tareas");
-    console.WriteLine("3. Actualizar estado");
-    console.WriteLine("4. Cambiar responsable");
-    console.WriteLine("5. Eliminar tarea");
-    console.WriteLine("6. Salir");
+    console.ClearConsole();
+    string[] mainOptions = { "Crear tarea", "Listar tareas", "Actualizar estado", "Cambiar responsable", "Eliminar tarea", "Salir" };
+    console.DisplayMenu("TASKFLOW", mainOptions);
     Console.Write("\nOpción: ");
 
     string opcion = console.ReadLine() ?? string.Empty;
@@ -32,12 +27,9 @@ while (!salir)
             break;
 
         case "2":
-            Console.Clear();
-            console.WriteLine("--- LISTAR TAREAS ---");
-            console.WriteLine("1. Mostrar todas");
-            console.WriteLine("2. Solo Pendientes");
-            console.WriteLine("3. Solo En Progreso");
-            console.WriteLine("4. Solo Completadas");
+            console.ClearConsole();
+            string[] listOptions = { "Mostrar todas", "Solo Pendientes", "Solo En Progreso", "Solo Completadas" };
+            console.DisplayMenu("LISTAR TAREAS", listOptions);
             Console.Write("\nSeleccione una opción de filtrado (1-4): ");
 
             string opcionFiltro = console.ReadLine() ?? "1";
@@ -53,22 +45,15 @@ while (!salir)
             var listaTareas = service.ListarTareas(estadoFiltro);
 
             console.WriteLine("\n--- RESULTADO ---");
-            if (listaTareas.Count == 0)
-            {
-                console.WriteLine("No hay tareas registradas para mostrar.");
-            }
-            else
-            {
-                foreach (var t in listaTareas)
-                {
-                    console.WriteLine($"ID: {t.Id} | Título: {t.Title} | Resp: {t.Responsible} | Estado: {t.Status} | Creada: {t.CreatedAt:dd/MM/yyyy}");
-                }
-            }
+            console.DisplayTasksTable(listaTareas);
             console.EsperarTecla();
             break;
 
         case "3":
-            console.WriteLine("\n--- ACTUALIZAR ESTADO DE TAREA ---");
+            console.ClearConsole();
+            console.WriteLine("\n┌─────────────────────────────┐");
+            console.WriteLine("│   ACTUALIZAR ESTADO DE TAREA │");
+            console.WriteLine("└─────────────────────────────┘");
             Console.Write("ID de la tarea: ");
             string inputId = console.ReadLine()?.Trim() ?? string.Empty;
 
@@ -79,10 +64,8 @@ while (!salir)
                 break;
             }
 
-            console.WriteLine("Nuevo estado:");
-            console.WriteLine("  1. Pendiente");
-            console.WriteLine("  2. En Progreso");
-            console.WriteLine("  3. Completada");
+            string[] stateOptions = { "Pendiente", "En Progreso", "Completada" };
+            console.DisplayMenu("NUEVO ESTADO", stateOptions);
             Console.Write("Opción: ");
 
             string opcionEstado = console.ReadLine()?.Trim() ?? string.Empty;
