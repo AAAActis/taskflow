@@ -108,6 +108,44 @@ while (!salir)
             break;
 
         case "4":
+            console.ClearConsole();
+            console.WriteLine("\n┌─────────────────────────────┐");
+            console.WriteLine("│   CAMBIAR RESPONSABLE DE TAREA │");
+            console.WriteLine("└─────────────────────────────┘");
+            Console.Write("ID de la tarea: ");
+            string inputIdResp = console.ReadLine()?.Trim() ?? string.Empty;
+
+            if (!int.TryParse(inputIdResp, out int idResp))
+            {
+                console.WriteLine("ID inválido. Debe ser un número entero.");
+                console.EsperarTecla();
+                break;
+            }
+
+            Console.Write("Nuevo responsable: ");
+            string nuevoResponsable = console.ReadLine()?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrEmpty(nuevoResponsable))
+            {
+                console.WriteLine("El nombre del responsable no puede estar vacío.");
+                console.EsperarTecla();
+                break;
+            }
+
+             try
+             {
+                 var tareaActualizada = service.ActualizarResponsable(idResp, nuevoResponsable);
+                 console.WriteLine($"\n✔ Tarea #{tareaActualizada.Id} '{tareaActualizada.Title}' actualizada.");
+                 console.WriteLine($"  Nuevo Responsable: {nuevoResponsable}");
+                 console.WriteLine($"  Actualizada: {tareaActualizada.UpdatedAt:dd/MM/yyyy HH:mm:ss}");
+             }
+             catch (KeyNotFoundException ex)
+             {
+                 console.WriteLine($"\nError: {ex.Message}");
+             }
+
+             console.EsperarTecla();
+             break;
         case "5":
             console.WriteLine("\nFuncionalidad pendiente de implementación.");
             console.EsperarTecla();

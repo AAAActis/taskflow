@@ -63,6 +63,18 @@ namespace TaskFlow.Services
             return tarea;
         }
 
+        public TaskItem ActualizarResponsable(int id, string nuevoResponsable)
+        {
+            var tarea = _tasks.FirstOrDefault(t => t.Id == id)
+                ?? throw new KeyNotFoundException($"No se encontró la tarea con ID {id}.");
+
+            tarea.Responsible = nuevoResponsable;
+            tarea.UpdatedAt = DateTime.Now;
+
+            GuardarTareas();
+            return tarea;
+        }
+
         private List<TaskItem> CargarTareas()
         {
             if (!File.Exists(_filePath))
